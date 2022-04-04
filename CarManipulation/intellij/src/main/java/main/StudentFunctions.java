@@ -49,6 +49,7 @@ public class StudentFunctions {
 
             try {
                 File inFile = new File(fileName);
+                System.out.println(fileName);
                 if (!inFile.exists()) {
                     return ReturnCodes.RC_FILE_NOT_FOUND;
                 }
@@ -81,7 +82,7 @@ public class StudentFunctions {
         int rbn = P2Main.hash(vehicle.getVehicleId(), hashFile.getHashHeader().getMaxHash());
         Vehicle newVehicle = new Vehicle();
         int read = StudentFunctions.readRec(hashFile, rbn, newVehicle);
-        if (newVehicle.getVehicleIdAsString().length() == 0){
+        if (read == ReturnCodes.RC_LOC_NOT_FOUND || newVehicle.getVehicleIdAsString().length() == 0){
             writeRec(hashFile, rbn, vehicle);
             return ReturnCodes.RC_OK;
         }
@@ -173,26 +174,27 @@ public class StudentFunctions {
      * return the vehicle via the parameter and return RC_OK.
      * Otherwise, return RC_REC_NOT_FOUND
      */
+    //Modify this function starting at the bulleted item in RED
+    //• Change your function to use rbn as a MutableInteger
+    //• Since the vehicles vehicleId was provided, determine the RBN using P2Main's hash function.
+    //• Use readRec to read the record at that RBN.
+    //• If the vehicle at that location matches the specified vehicle’s vehicleId, return the vehicle via the
+    //vehicle parameter and return RC_OK.
+    //• Otherwise, it is a synonym to the vehicle in the hashed location:
+    //o Determine if it exists as a synonym using probing with a K value of 1.
+    //o Be sure to store any changed rbn in the rbn parameter!! P2Main uses it.
+    //o If vehicleIds match, return the vehicle via the vehicle parameter and return RC_OK.
+    //o If you read past the maximum records in the file, return RC_REC_NOT_FOUND.
+    //o If you have read for the maximum probes, and it wasn't found,return
+    //RC_REC_NOT_FOUND.
     public static int vehicleRead(HashFile hashFile, MutableInteger rbn, Vehicle vehicle) {
         Vehicle newVehicle = new Vehicle();
         int read = readRec(hashFile, rbn.intValue(), newVehicle);
-        if (newVehicle.getVehicleIdAsString().equals(vehicle.getVehicleIdAsString())){
+        if (read == ReturnCodes.RC_OK && newVehicle.getVehicleIdAsString().equals(vehicle.getVehicleIdAsString()) == true){
             vehicle.fromByteArray(newVehicle.toByteArray());
             return ReturnCodes.RC_OK;
         }
-        //Modify this function starting at the bulleted item in RED
-        //• Change your function to use rbn as a MutableInteger
-        //• Since the vehicles vehicleId was provided, determine the RBN using P2Main's hash function.
-        //• Use readRec to read the record at that RBN.
-        //• If the vehicle at that location matches the specified vehicle’s vehicleId, return the vehicle via the
-        //vehicle parameter and return RC_OK.
-        //• Otherwise, it is a synonym to the vehicle in the hashed location:
-        //o Determine if it exists as a synonym using probing with a K value of 1.
-        //o Be sure to store any changed rbn in the rbn parameter!! P2Main uses it.
-        //o If vehicleIds match, return the vehicle via the vehicle parameter and return RC_OK.
-        //o If you read past the maximum records in the file, return RC_REC_NOT_FOUND.
-        //o If you have read for the maximum probes, and it wasn't found,return
-        //RC_REC_NOT_FOUND.
+
         else{
             int k = 1;
             int init = rbn.intValue();
@@ -201,8 +203,8 @@ public class StudentFunctions {
                 if(rbn.intValue() > hashFile.getHashHeader().getMaxHash()){
                     return ReturnCodes.RC_REC_NOT_FOUND;
                 }
-                read = readRec(hashFile, rbn.intValue(), vehicle);
-                if(vehicle.getVehicleIdAsString().equals(newVehicle.getVehicleIdAsString())){
+                read = readRec(hashFile, rbn.intValue(), newVehicle);
+                if(read == ReturnCodes.RC_OK && vehicle.getVehicleIdAsString().equals(newVehicle.getVehicleIdAsString()) == true){
                     vehicle.fromByteArray(newVehicle.toByteArray());
                     return ReturnCodes.RC_OK;
                 }

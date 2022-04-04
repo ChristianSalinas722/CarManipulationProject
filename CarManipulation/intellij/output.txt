@@ -1,0 +1,242 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ----------------------< 01706908:cs3743-program1 >----------------------
+[INFO] Building cs3743-program1 1.0-SNAPSHOT
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- exec-maven-plugin:3.0.0:java (default-cli) @ cs3743-program1 ---
+* CS3743 p2Input.txt
+* Nuke the Hash file if it exists using driver function
+ >> NUKE VEHICLE vehicle.dat
+* Opening of a non-existent file should cause an error
+ >> OPEN VEHICLE vehicle.data
+vehicle.data
+    **** ERROR: file not found or invalid header record
+*
+* 1. Create the hash file
+*
+ >> CREATE VEHICLE vehicle.dat 19 5
+    Record size is 72
+ >> PRINTALL VEHICLE vehicle.dat
+vehicle.dat
+    MaxHash=19, RecSize=72, MaxProbes=5
+*
+* 2. Creating it again should cause an existence error
+*
+ >> CREATE VEHICLE vehicle.dat 17 5
+    Record size is 72
+    **** ERROR: file already exists
+* Open it
+ >> OPEN VEHICLE vehicle.dat
+vehicle.dat
+*
+* 3. Insert some vehicles
+*
+ >> INSERT VEHICLE CB001,CHEVY,BelAir,1957
+            Hash RBN is 13
+ >> PRINTALL VEHICLE vehicle.dat
+vehicle.dat
+    MaxHash=19, RecSize=72, MaxProbes=5
+    13  CB001 1957 CHEVY             BelAir Hash=13
+ >> INSERT VEHICLE DD001,DODGE,Dart,1970
+            Hash RBN is 16
+ >> PRINTALL VEHICLE vehicle.dat
+vehicle.dat
+    MaxHash=19, RecSize=72, MaxProbes=5
+    13  CB001 1957 CHEVY             BelAir Hash=13
+    16  DD001 1970 DODGE               Dart Hash=16
+*
+* 4. Read an existing vehicle
+*
+ >> READ VEHICLE CB001
+            Hash RBN is 13
+    13  CB001 1957 CHEVY             BelAir Hash=13
+*
+* 5. Read should not find these three vehicles
+*
+ >> READ VEHICLE TP001
+            Hash RBN is 6
+    **** ERROR: record not found
+ >> READ VEHICLE FE001
+            Hash RBN is 19
+    **** ERROR: record not found
+ >> READ VEHICLE DD010
+            Hash RBN is 16
+    **** ERROR: record not found
+*
+* 6. Insert two more vehicles
+*
+ >> INSERT VEHICLE TP001,TOYOTA,Prius,2007
+            Hash RBN is 6
+ >> INSERT VEHICLE DD002,DODGE,Dart,1974
+            Hash RBN is 17
+ >> PRINTALL VEHICLE vehicle.dat
+vehicle.dat
+    MaxHash=19, RecSize=72, MaxProbes=5
+     6  TP001 2007 TOYOTA             Prius Hash=6
+    13  CB001 1957 CHEVY             BelAir Hash=13
+    16  DD001 1970 DODGE               Dart Hash=16
+    17  DD002 1974 DODGE               Dart Hash=17
+*
+* 7. Insert an existing vehicle - should cause an error
+*
+ >> INSERT VEHICLE CB001,CHEVY,BelAir,1966
+            Hash RBN is 13
+    **** ERROR: record already exists
+ >> READ VEHICLE CB001
+            Hash RBN is 13
+    13  CB001 1957 CHEVY             BelAir Hash=13
+*
+* 8. Insert more vehicles
+*
+ >> INSERT VEHICLE LH001,LAMBORGHINI,Huracan,2018
+            Hash RBN is 9
+ >> INSERT VEHICLE SFE09,SUBARU,FE,1979
+            Hash RBN is 5
+ >> INSERT VEHICLE HA004,HONDA,Accord,1984
+            Hash RBN is 1
+ >> INSERT VEHICLE FX004,FORD,Expedition,1990
+            Hash RBN is 3
+ >> INSERT VEHICLE T4004,TOYOTA,4Runner,2004
+            Hash RBN is 19
+ >> INSERT VEHICLE T4006,TOYOTA,4Runner,2006
+            Hash RBN is 2
+ >> PRINTALL VEHICLE vehicle.dat
+vehicle.dat
+    MaxHash=19, RecSize=72, MaxProbes=5
+     1  HA004 1984 HONDA             Accord Hash=1
+     2  T4006 2006 TOYOTA           4Runner Hash=2
+     3  FX004 1990 FORD          Expedition Hash=3
+     5  SFE09 1979 SUBARU                FE Hash=5
+     6  TP001 2007 TOYOTA             Prius Hash=6
+     9  LH001 2018 LAMBORGHINI      Huracan Hash=9
+    13  CB001 1957 CHEVY             BelAir Hash=13
+    16  DD001 1970 DODGE               Dart Hash=16
+    17  DD002 1974 DODGE               Dart Hash=17
+    19  T4004 2004 TOYOTA           4Runner Hash=19
+*
+* 9. Insert a vehicle that is a synonym
+*
+ >> INSERT VEHICLE HL001,HONDA,Lift,2013
+            Hash RBN is 9
+ >> READ VEHICLE HL001
+            Hash RBN is 9
+    10  HL001 2013 HONDA               Lift Hash=9
+ >> READ VEHICLE LH001
+            Hash RBN is 9
+     9  LH001 2018 LAMBORGHINI      Huracan Hash=9
+ >> PRINTALL VEHICLE vehicle.dat
+vehicle.dat
+    MaxHash=19, RecSize=72, MaxProbes=5
+     1  HA004 1984 HONDA             Accord Hash=1
+     2  T4006 2006 TOYOTA           4Runner Hash=2
+     3  FX004 1990 FORD          Expedition Hash=3
+     5  SFE09 1979 SUBARU                FE Hash=5
+     6  TP001 2007 TOYOTA             Prius Hash=6
+     9  LH001 2018 LAMBORGHINI      Huracan Hash=9
+    10  HL001 2013 HONDA               Lift Hash=9
+    13  CB001 1957 CHEVY             BelAir Hash=13
+    16  DD001 1970 DODGE               Dart Hash=16
+    17  DD002 1974 DODGE               Dart Hash=17
+    19  T4004 2004 TOYOTA           4Runner Hash=19
+*
+* 10. Insert more vehicles that collide
+*
+ >> INSERT VEHICLE TH008,TOYOTA,Highlander,2015
+            Hash RBN is 5
+ >> INSERT VEHICLE FF001,FERRARI,F40,1987
+            Hash RBN is 1
+ >> READ VEHICLE HL001
+            Hash RBN is 9
+    10  HL001 2013 HONDA               Lift Hash=9
+ >> READ VEHICLE TH008
+            Hash RBN is 5
+     7  TH008 2015 TOYOTA        Highlander Hash=5
+ >> READ VEHICLE FF001
+            Hash RBN is 1
+     4  FF001 1987 FERRARI              F40 Hash=1
+ >> PRINTALL VEHICLE vehicle.dat
+vehicle.dat
+    MaxHash=19, RecSize=72, MaxProbes=5
+     1  HA004 1984 HONDA             Accord Hash=1
+     2  T4006 2006 TOYOTA           4Runner Hash=2
+     3  FX004 1990 FORD          Expedition Hash=3
+     4  FF001 1987 FERRARI              F40 Hash=1
+     5  SFE09 1979 SUBARU                FE Hash=5
+     6  TP001 2007 TOYOTA             Prius Hash=6
+     7  TH008 2015 TOYOTA        Highlander Hash=5
+     9  LH001 2018 LAMBORGHINI      Huracan Hash=9
+    10  HL001 2013 HONDA               Lift Hash=9
+    13  CB001 1957 CHEVY             BelAir Hash=13
+    16  DD001 1970 DODGE               Dart Hash=16
+    17  DD002 1974 DODGE               Dart Hash=17
+    19  T4004 2004 TOYOTA           4Runner Hash=19
+*
+* 11. Read a vehicle which won't be found along
+*     the synonym list, causing us to try maxProbes
+*
+ >> READ VEHICLE LH010
+            Hash RBN is 9
+    **** ERROR: record not found
+*
+* 12. Insert a vehicle which has too many collisions
+*
+ >> INSERT VEHICLE T4007,TOYOTA,4Runner,2007
+            Hash RBN is 3
+    **** ERROR: Too Many Collisions to write record
+ >> PRINTALL VEHICLE vehicle.dat
+vehicle.dat
+    MaxHash=19, RecSize=72, MaxProbes=5
+     1  HA004 1984 HONDA             Accord Hash=1
+     2  T4006 2006 TOYOTA           4Runner Hash=2
+     3  FX004 1990 FORD          Expedition Hash=3
+     4  FF001 1987 FERRARI              F40 Hash=1
+     5  SFE09 1979 SUBARU                FE Hash=5
+     6  TP001 2007 TOYOTA             Prius Hash=6
+     7  TH008 2015 TOYOTA        Highlander Hash=5
+     9  LH001 2018 LAMBORGHINI      Huracan Hash=9
+    10  HL001 2013 HONDA               Lift Hash=9
+    13  CB001 1957 CHEVY             BelAir Hash=13
+    16  DD001 1970 DODGE               Dart Hash=16
+    17  DD002 1974 DODGE               Dart Hash=17
+    19  T4004 2004 TOYOTA           4Runner Hash=19
+ >> READ VEHICLE T4007
+            Hash RBN is 3
+    **** ERROR: record not found
+*
+* 13. Update a vehicle
+*
+ >> UPDATE VEHICLE HA004,HONDA,Accord_LX,1988
+            Hash RBN is 1
+ >> READ VEHICLE HA004
+            Hash RBN is 1
+     1  HA004 1988 HONDA          Accord_LX Hash=1
+*
+* 14. Update a vehicle hashed to a collision
+*
+ >> UPDATE VEHICLE FF001,FERRARI,F40A,1999
+            Hash RBN is 1
+    **** ERROR: record already exists
+ >> PRINTALL VEHICLE vehicle.dat
+vehicle.dat
+    MaxHash=19, RecSize=72, MaxProbes=5
+     1  HA004 1988 HONDA          Accord_LX Hash=1
+     2  T4006 2006 TOYOTA           4Runner Hash=2
+     3  FX004 1990 FORD          Expedition Hash=3
+     4  FF001 1987 FERRARI              F40 Hash=1
+     5  SFE09 1979 SUBARU                FE Hash=5
+     6  TP001 2007 TOYOTA             Prius Hash=6
+     7  TH008 2015 TOYOTA        Highlander Hash=5
+     9  LH001 2018 LAMBORGHINI      Huracan Hash=9
+    10  HL001 2013 HONDA               Lift Hash=9
+    13  CB001 1957 CHEVY             BelAir Hash=13
+    16  DD001 1970 DODGE               Dart Hash=16
+    17  DD002 1974 DODGE               Dart Hash=17
+    19  T4004 2004 TOYOTA           4Runner Hash=19
+*
+* 15. Read a vehicle which won't be found, but
+*     causes us to read past the end of the file
+*
+ >> READ VEHICLE T4040
+            Hash RBN is 19
+    **** ERROR: record not found
