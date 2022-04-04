@@ -6,7 +6,7 @@ import hashdb.Vehicle;
 import misc.MutableInteger;
 import misc.ReturnCodes;
 import java.io.*;
-import java.util.Arrays;
+//import java.util.Arrays;
 
 public class StudentFunctions {
     /**
@@ -191,7 +191,7 @@ public class StudentFunctions {
         //o Be sure to store any changed rbn in the rbn parameter!! P2Main uses it.
         //o If vehicleIds match, return the vehicle via the vehicle parameter and return RC_OK.
         //o If you read past the maximum records in the file, return RC_REC_NOT_FOUND.
-        //o If you have read for the maximum probes and it was’nt found,return
+        //o If you have read for the maximum probes, and it wasn't found,return
         //RC_REC_NOT_FOUND.
         else{
             int k = 1;
