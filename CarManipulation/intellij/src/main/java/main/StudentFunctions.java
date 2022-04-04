@@ -217,7 +217,7 @@ public class StudentFunctions {
 
         int read = readRec(hashfile, rbn.intValue(), temp);
 
-        if(read == ReturnCodes.RC_OK && Arrays.equals(vehicle.getVehicleId(), temp.getVehicleId())){
+        if(read == ReturnCodes.RC_OK && vehicle.getVehicleIdAsString().equals(temp.getVehicleIdAsString())){
             writeRec(hashfile, rbn.intValue(), vehicle);
             return ReturnCodes.RC_OK;
         }
@@ -227,7 +227,7 @@ public class StudentFunctions {
 
             read = readRec(hashfile, init + k, temp);
 
-            if(Arrays.equals(temp.getVehicleId(), vehicle.getVehicleId())){
+            if(vehicle.getVehicleIdAsString().equals(temp.getVehicleIdAsString())){
                 return ReturnCodes.RC_REC_EXISTS;
             }
 
@@ -238,11 +238,11 @@ public class StudentFunctions {
                 Vehicle collision = new Vehicle();
                 read = readRec(hashfile, init + k, collision);
 
-                if(Arrays.equals(collision.getVehicleId(), vehicle.getVehicleId())){
+                if(collision.getVehicleIdAsString().equals(vehicle.getVehicleIdAsString())){
                     return ReturnCodes.RC_REC_EXISTS;
                 }
 
-                if(read == ReturnCodes.RC_LOC_NOT_FOUND || new String(collision.getVehicleId()).trim().isEmpty()){
+                if(read == ReturnCodes.RC_LOC_NOT_FOUND || collision.getVehicleIdAsString().length() ==0){
                     writeRec(hashfile, init + k, vehicle);
                     return ReturnCodes.RC_OK;
                 }
