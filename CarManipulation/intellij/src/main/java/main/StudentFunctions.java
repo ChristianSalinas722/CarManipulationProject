@@ -105,7 +105,7 @@ public class StudentFunctions {
                     return ReturnCodes.RC_REC_EXISTS;
                 }
 
-                if(read == ReturnCodes.RC_LOC_NOT_FOUND || new String(collision.getVehicleId()).trim().isEmpty()){
+                if(read == ReturnCodes.RC_LOC_NOT_FOUND || collision.getVehicleIdAsString().length() == 0){
                     writeRec(hashFile, init + k, vehicle);
                     return ReturnCodes.RC_OK;
                 }
@@ -175,7 +175,7 @@ public class StudentFunctions {
      */
     public static int vehicleRead(HashFile hashFile, MutableInteger rbn, Vehicle vehicle) {
         Vehicle newVehicle = new Vehicle();
-        //int read = readRec(hashFile, rbn.intValue(), newVehicle);
+        int read = readRec(hashFile, rbn.intValue(), newVehicle);
         if (newVehicle.getVehicleIdAsString().equals(vehicle.getVehicleIdAsString())){
             vehicle.fromByteArray(newVehicle.toByteArray());
             return ReturnCodes.RC_OK;
@@ -201,8 +201,8 @@ public class StudentFunctions {
                 if(rbn.intValue() > hashFile.getHashHeader().getMaxHash()){
                     return ReturnCodes.RC_REC_NOT_FOUND;
                 }
-                //read = readRec(hashFile, rbn.intValue(), vehicle);
-                if(newVehicle.getVehicleIdAsString().equals(vehicle.getVehicleIdAsString())){
+                read = readRec(hashFile, rbn.intValue(), vehicle);
+                if(vehicle.getVehicleIdAsString().equals(newVehicle.getVehicleIdAsString())){
                     vehicle.fromByteArray(newVehicle.toByteArray());
                     return ReturnCodes.RC_OK;
                 }
