@@ -1,0 +1,120 @@
+* CS3743 p2InputExtra.txt
+* Nuke the Hash file if it exists using driver function
+NUKE VEHICLE vehicle.dat
+* Opening of a non-existent file should cause an error
+OPEN VEHICLE vehicle.data
+*
+* 1. Create the hash file
+*
+CREATE VEHICLE vehicle.dat 19 5
+PRINTALL VEHICLE vehicle.dat
+*
+* 2. Creating it again should cause an existence error
+*
+CREATE VEHICLE vehicle.dat 17 5
+* Open it
+OPEN VEHICLE vehicle.dat
+*
+* 3. Insert some vehicles
+*
+INSERT VEHICLE CB001,CHEVY,BelAir,1957
+PRINTALL VEHICLE vehicle.dat
+INSERT VEHICLE DD001,DODGE,Dart,1970
+PRINTALL VEHICLE vehicle.dat
+*
+* 4. Read an existing vehicle
+*
+READ VEHICLE CB001
+*
+* 5. Read should not find these three vehicles
+*
+READ VEHICLE TP001
+READ VEHICLE FE001
+READ VEHICLE DD010
+*
+* 6. Insert two more vehicles
+*
+INSERT VEHICLE TP001,TOYOTA,Prius,2007
+INSERT VEHICLE DD002,DODGE,Dart,1974
+PRINTALL VEHICLE vehicle.dat
+*
+* 7. Insert an existing vehicle - should cause an error
+* 
+INSERT VEHICLE CB001,CHEVY,BelAir,1966
+READ VEHICLE CB001
+*
+* 8. Insert more vehicles
+*
+INSERT VEHICLE LH001,LAMBORGHINI,Huracan,2018
+INSERT VEHICLE SFE09,SUBARU,FE,1979
+INSERT VEHICLE HA004,HONDA,Accord,1984
+INSERT VEHICLE FX004,FORD,Expedition,1990
+INSERT VEHICLE T4004,TOYOTA,4Runner,2004
+INSERT VEHICLE T4006,TOYOTA,4Runner,2006
+PRINTALL VEHICLE vehicle.dat
+*
+* 9. Insert a vehicle that is a synonym
+*
+INSERT VEHICLE HL001,HONDA,Lift,2013
+READ VEHICLE HL001
+READ VEHICLE LH001
+PRINTALL VEHICLE vehicle.dat
+*
+* 10. Insert more vehicles that collide
+*
+INSERT VEHICLE TH008,TOYOTA,Highlander,2015
+INSERT VEHICLE FF001,FERRARI,F40,1987
+READ VEHICLE HL001
+READ VEHICLE TH008
+READ VEHICLE FF001
+PRINTALL VEHICLE vehicle.dat
+* 
+* 11. Read a vehicle which won't be found along
+*     the synonym list, causing us to try maxProbes
+*
+READ VEHICLE LH010
+*
+* 12. Insert a vehicle which has too many collisions
+*
+INSERT VEHICLE T4007,TOYOTA,4Runner,2007
+PRINTALL VEHICLE vehicle.dat
+READ VEHICLE T4007
+* 
+* 13. Update a vehicle 
+*
+UPDATE VEHICLE HA004,HONDA,Accord_LX,1988
+READ VEHICLE HA004
+* 
+* 14. Update a vehicle hashed to a collision
+*
+UPDATE VEHICLE FF001,FERRARI,F40A,1999
+PRINTALL VEHICLE vehicle.dat
+*
+* 15. Read a vehicle which won't be found, but
+*     causes us to read past the end of the file
+* 
+READ VEHICLE T4040
+*
+* 16. Delete a vehicle that didn't have a collision
+*
+DELETE VEHICLE T4006
+PRINTALL VEHICLE vehicle.dat
+*
+* 17. Make certain that we can still get a vehicle that collided.
+*
+READ VEHICLE FF001
+*
+* 18. Update a vehicle that collided.
+*
+UPDATE VEHICLE FF001,FERRARI,F40B,2010
+PRINTALL VEHICLE vehicle.dat
+*
+* 19. Insert error since it exists
+*
+INSERT VEHICLE FF001,FERRARI,F40X,2019
+PRINTALL VEHICLE vehicle.dat
+*
+* 20. Use the empty slot on an insert
+*
+INSERT VEHICLE HB003,HONDA,Accord,2020
+PRINTALL VEHICLE vehicle.dat
